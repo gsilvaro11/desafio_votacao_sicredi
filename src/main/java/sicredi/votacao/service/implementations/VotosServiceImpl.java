@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import sicredi.votacao.dto.VotoCadastro;
 import sicredi.votacao.dto.VotoDTO;
 import sicredi.votacao.entity.VotoEntity;
+import sicredi.votacao.exception.ValidationsGlobalExceptions;
+import sicredi.votacao.exception.enums.VotoErroEnum;
 import sicredi.votacao.repository.VotosRepository;
 import sicredi.votacao.service.interfaces.VotosService;
 
@@ -28,7 +30,11 @@ public class VotosServiceImpl implements VotosService {
         VotoEntity voto = objectMapper.convertValue(novoVoto, VotoEntity.class);
         voto.setAssociado(associadosServiceImpl.findByCpf(novoVoto.getCpf()));
         voto.setSessao(sessoesServiceImpl.findById(novoVoto.getSessaoId()));
-        // validar se o cpf já votou
+
+        if(votosRepository.findBySessaoAndCpf(voto.getSessao().getId(), voto.getAssociado().getCpf()).isPresent()){
+            throw new ValidationsGlobalExceptions(VotoErroEnum.ASSOCIADO_CADASTRADO_NA_SESSAO.getDescricao());
+        }
+        
         // validar se a votação n acabou e se a sessão está ativa
 
         votosRepository.saveAndFlush(voto);
@@ -39,7 +45,7 @@ public class VotosServiceImpl implements VotosService {
                 .stream()
                 .map(voto -> VotoDTO.builder()
                         .id(voto.getId())
-                        .voto(voto.getVoto())
+                        .voto(voto.getVoto() ? "SIM" : "NÃO")
                         .dataCriacao(voto.getDataCriacao())
                         .cpfAssociado(voto.getAssociado().getCpf())
                         .build())

@@ -7,6 +7,9 @@ import sicredi.votacao.entity.PautaEntity;
 
 public interface PautaService {
     void create(PautaDTO decisaoDTO);
+
     PautaEntity findById(Long id);
+
     List<PautaDTO> list(Long id, String titulo, String descricao);
+
 }

@@ -5,10 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum AssociadoErroEnum {
-
-    ASSOCIADO_CADASTRADO("Este associado já está cadastrado."),
-    ASSOCIADO_NAO_ENCONTRADO("Associado não encontrado.");
+public enum VotoErroEnum {
+    ASSOCIADO_CADASTRADO_NA_SESSAO("Associado já cadastrado na sessão.");
 
     private String descricao;
 }

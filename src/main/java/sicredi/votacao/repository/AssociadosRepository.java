@@ -13,7 +13,7 @@ import sicredi.votacao.entity.AssociadoEntity;
 public interface AssociadosRepository extends JpaRepository<AssociadoEntity, Long> {
 
     @Query(value = "SELECT e FROM AssociadoEntity e " +
-            "WHERE (e.id = :id or :id IS NULL) " + 
+            "WHERE (e.id = :id or :id IS NULL) " +
             "AND (e.nome LIKE CONCAT('%', UPPER(:nome), '%') OR :nome IS NULL) " +
             "AND (e.cpf LIKE :cpf OR :cpf IS NULL) ")
     List<AssociadoEntity> list(Long id, String cpf, String nome);

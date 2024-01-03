@@ -8,6 +8,8 @@ import sicredi.votacao.entity.SessaoEntity;
 
 public interface SessoesService {
     void create(SessaoCadastroDTO sessaoDTO);
+
     SessaoEntity findById(Long id);
+
     List<SessaoDTO> list();
 }

@@ -11,7 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class VotoDTO {
     private Long id;
-    private Boolean voto;
+    private String voto;
     private Timestamp dataCriacao;
     private String cpfAssociado;
 }
