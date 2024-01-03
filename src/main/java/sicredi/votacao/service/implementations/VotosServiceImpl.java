@@ -35,7 +35,9 @@ public class VotosServiceImpl implements VotosService {
             throw new ValidationsGlobalExceptions(VotoErroEnum.ASSOCIADO_CADASTRADO_NA_SESSAO.getDescricao());
         }
         
-        // validar se a votação n acabou e se a sessão está ativa
+        if(!voto.getSessao().validaSessaoAtiva()) {
+            throw new ValidationsGlobalExceptions(VotoErroEnum.VOTACAO_ENCERRADA.getDescricao());
+        }
 
         votosRepository.saveAndFlush(voto);
     }
@@ -48,6 +50,7 @@ public class VotosServiceImpl implements VotosService {
                         .voto(voto.getVoto() ? "SIM" : "NÃO")
                         .dataCriacao(voto.getDataCriacao())
                         .cpfAssociado(voto.getAssociado().getCpf())
+                        .idPauta(voto.getSessao().getPauta().getId())
                         .build())
                 .collect(Collectors.toList());
     }

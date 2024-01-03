@@ -17,4 +17,10 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             "AND (p.descricao LIKE CONCAT('%', UPPER(:descricao), '%') OR :descricao IS NULL) ")
     List<PautaEntity> list(Long id, String titulo, String descricao);
 
+    @Query(value = "SELECT COUNT(vo) from PautaEntity pa " +
+            "JOIN SessaoEntity se ON se.pauta.id = pa.id " +
+            "JOIN VotoEntity vo ON vo.sessao.id = se.id " +
+            "WHERE pa.id = :id and vo.voto = :voto ")
+    Long countByIdAndVote(Long id, Boolean voto);
+
 }

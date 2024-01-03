@@ -11,4 +11,4 @@ spring:
     show-sql: true
   
 sessao:
-  duracao: 3600
+  duracao: 60 #1 minuto.

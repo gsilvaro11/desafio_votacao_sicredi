@@ -13,5 +13,4 @@ public interface VotosRepository extends JpaRepository<VotoEntity, Long> {
 
     @Query(value = "FROM VotoEntity v WHERE v.sessao.id = :id AND v.associado.cpf = :cpf")
     Optional<VotoEntity> findBySessaoAndCpf(Long id, String cpf);
-
 }

@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import sicredi.votacao.dto.PautaContabilizacao;
 import sicredi.votacao.dto.PautaDTO;
+import sicredi.votacao.dto.PautaCadastroDTO;
 import sicredi.votacao.entity.PautaEntity;
 import sicredi.votacao.exception.ValidationsGlobalExceptions;
 import sicredi.votacao.exception.enums.PautaErroEnum;
@@ -23,7 +25,7 @@ public class PautaServiceImpl implements PautaService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public void create(PautaDTO pautaDTO) {
+    public void create(PautaCadastroDTO pautaDTO) {
         pautaRepository.saveAndFlush(objectMapper.convertValue(pautaDTO, PautaEntity.class));
     }
 
@@ -37,6 +39,26 @@ public class PautaServiceImpl implements PautaService {
     public List<PautaDTO> list(Long id, String titulo, String descricao) {
         return pautaRepository.list(id, titulo, descricao).stream()
                 .map(pauta -> objectMapper.convertValue(pauta, PautaDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public PautaContabilizacao accounting(Long id) {
+        PautaEntity pauta = findById(id);
+
+        Long pros = pautaRepository.countByIdAndVote(id, true);
+        Long contras = pautaRepository.countByIdAndVote(id, false);
+
+        pauta.setResultado(pros > contras ? "SIM" : "NÃO");
+        PautaEntity pautaAtualizada = pautaRepository.save(pauta);
+
+        return PautaContabilizacao.builder()
+                .id(pautaAtualizada.getId())
+                .titulo(pautaAtualizada.getTitulo())
+                .descricao(pautaAtualizada.getDescricao())
+                .resultado(pautaAtualizada.getResultado())
+                .pros(pros)
+                .contras(contras)
+                .build();
     }
 
 }

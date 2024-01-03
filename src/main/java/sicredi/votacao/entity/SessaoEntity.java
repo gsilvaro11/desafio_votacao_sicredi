@@ -1,6 +1,7 @@
 package sicredi.votacao.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,12 +28,16 @@ public class SessaoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long duracao;
-    
+
     @Column(insertable = false, updatable = false)
     private Timestamp dataCriacao;
 
     @ManyToOne()
     @JoinColumn(name = "id_pauta")
     private PautaEntity pauta;
+
+    public Boolean validaSessaoAtiva() {
+        return LocalDateTime.now().isBefore(this.dataCriacao.toLocalDateTime().plusSeconds(this.duracao));
+    }
 
 }

@@ -46,6 +46,12 @@ public class SessoesServiceImpl implements SessoesService {
     }
 
     @Override
+    public SessaoEntity findByIdPauta(Long id) {
+        return sessoesRepository.findByIdPauta(id).orElseThrow(
+                () -> new ValidationsGlobalExceptions(SessaoErroEnum.SESSAO_NAO_ENCONTRADO.getDescricao()));
+    }
+
+    @Override
     public List<SessaoDTO> list() {
         return sessoesRepository.findAll()
                 .stream()

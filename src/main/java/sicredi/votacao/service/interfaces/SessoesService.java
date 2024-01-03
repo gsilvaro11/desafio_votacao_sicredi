@@ -11,5 +11,7 @@ public interface SessoesService {
 
     SessaoEntity findById(Long id);
 
+    SessaoEntity findByIdPauta(Long id);
+
     List<SessaoDTO> list();
 }

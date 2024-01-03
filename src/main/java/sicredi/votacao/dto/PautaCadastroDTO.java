@@ -1,8 +1,6 @@
 package sicredi.votacao.dto;
 
-import java.sql.Timestamp;
-
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,12 +8,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PautaDTO {
-    private Long id;
-    private String titulo;
-    private String descricao;
-    private String resultado;
+public class PautaCadastroDTO {
 
-    @Column(insertable = false, updatable = false)
-    private Timestamp dataCriacao;
+    private Long id;
+
+    @NotBlank(message = "Campo não pode estar vazio.")
+    private String titulo;
+
+    @NotBlank(message = "Campo não pode estar vazio.")
+    private String descricao;
+
 }

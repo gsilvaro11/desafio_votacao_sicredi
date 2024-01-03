@@ -14,4 +14,5 @@ public class VotoDTO {
     private String voto;
     private Timestamp dataCriacao;
     private String cpfAssociado;
+    private Long idPauta;
 }
