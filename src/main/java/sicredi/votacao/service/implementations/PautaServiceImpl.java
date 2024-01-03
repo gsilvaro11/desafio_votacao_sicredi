@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import sicredi.votacao.dto.PautaContabilizacao;
+import sicredi.votacao.dto.PautaContabilizacaoDTO;
 import sicredi.votacao.dto.PautaDTO;
 import sicredi.votacao.dto.PautaCadastroDTO;
 import sicredi.votacao.entity.PautaEntity;
@@ -42,7 +42,7 @@ public class PautaServiceImpl implements PautaService {
     }
 
     @Override
-    public PautaContabilizacao accounting(Long id) {
+    public PautaContabilizacaoDTO accounting(Long id) {
         PautaEntity pauta = findById(id);
 
         Long pros = pautaRepository.countByIdAndVote(id, true);
@@ -51,7 +51,7 @@ public class PautaServiceImpl implements PautaService {
         pauta.setResultado(pros > contras ? "SIM" : "NÃO");
         PautaEntity pautaAtualizada = pautaRepository.save(pauta);
 
-        return PautaContabilizacao.builder()
+        return PautaContabilizacaoDTO.builder()
                 .id(pautaAtualizada.getId())
                 .titulo(pautaAtualizada.getTitulo())
                 .descricao(pautaAtualizada.getDescricao())

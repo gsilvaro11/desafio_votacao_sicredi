@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class VotoCadastro {
+public class VotoCadastroDTO {
     @NotNull(message = "Campo não pode ser nulo.")
     private Long sessaoId;
 

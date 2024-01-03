@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import sicredi.votacao.dto.PautaContabilizacao;
+import sicredi.votacao.dto.PautaContabilizacaoDTO;
 import sicredi.votacao.dto.PautaDTO;
 import sicredi.votacao.dto.PautaCadastroDTO;
 import sicredi.votacao.service.implementations.PautaServiceImpl;
@@ -42,7 +42,7 @@ public class PautaController {
     }
 
     @PostMapping("/count/{id}")
-    public ResponseEntity<PautaContabilizacao> count(@PathVariable("id") Long id) {
+    public ResponseEntity<PautaContabilizacaoDTO> count(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(pautaServiceImpl.accounting(id));
     }
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import sicredi.votacao.dto.AssociadoCadastroDTO;
 import sicredi.votacao.dto.AssociadoDTO;
 import sicredi.votacao.service.implementations.AssociadosServiceImpl;
 
@@ -24,8 +25,8 @@ public class AssociadoController {
     private final AssociadosServiceImpl associateImpl;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Valid @RequestBody AssociadoDTO associateDTO) {
-        associateImpl.create(associateDTO);
+    public ResponseEntity<?> create(@Valid @RequestBody AssociadoCadastroDTO associadoCadastroDTO) {
+        associateImpl.create(associadoCadastroDTO);
 
         return ResponseEntity.ok(HttpStatus.CREATED);
     }

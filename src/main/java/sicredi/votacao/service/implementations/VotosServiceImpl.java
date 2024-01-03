@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import sicredi.votacao.dto.VotoCadastro;
+import sicredi.votacao.dto.VotoCadastroDTO;
 import sicredi.votacao.dto.VotoDTO;
 import sicredi.votacao.entity.VotoEntity;
 import sicredi.votacao.exception.ValidationsGlobalExceptions;
@@ -26,7 +26,7 @@ public class VotosServiceImpl implements VotosService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public void create(VotoCadastro novoVoto) {
+    public void create(VotoCadastroDTO novoVoto) {
         VotoEntity voto = objectMapper.convertValue(novoVoto, VotoEntity.class);
         voto.setAssociado(associadosServiceImpl.findByCpf(novoVoto.getCpf()));
         voto.setSessao(sessoesServiceImpl.findById(novoVoto.getSessaoId()));

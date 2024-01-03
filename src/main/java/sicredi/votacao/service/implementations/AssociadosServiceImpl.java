@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import sicredi.votacao.dto.AssociadoCadastroDTO;
 import sicredi.votacao.dto.AssociadoDTO;
 import sicredi.votacao.entity.AssociadoEntity;
 import sicredi.votacao.exception.ValidationsGlobalExceptions;
@@ -23,7 +24,7 @@ public class AssociadosServiceImpl implements AssociadosService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public void create(AssociadoDTO associateDTO) {
+    public void create(AssociadoCadastroDTO associateDTO) {
         if (associadosRepository.findByCpf(associateDTO.getCpf()).isPresent()) {
             throw new ValidationsGlobalExceptions(AssociadoErroEnum.ASSOCIADO_CADASTRADO.getDescricao());
         }

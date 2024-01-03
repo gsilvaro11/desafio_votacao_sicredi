@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class PautaContabilizacao {
+public class PautaContabilizacaoDTO {
     private Long id;
     private String titulo;
     private String descricao;

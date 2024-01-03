@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import sicredi.votacao.dto.VotoCadastro;
+import sicredi.votacao.dto.VotoCadastroDTO;
 import sicredi.votacao.dto.VotoDTO;
 import sicredi.votacao.service.implementations.VotosServiceImpl;
 
@@ -24,7 +24,7 @@ public class VotosController {
     private final VotosServiceImpl votosImpl;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Valid @RequestBody VotoCadastro votoCadastro) {
+    public ResponseEntity<?> create(@Valid @RequestBody VotoCadastroDTO votoCadastro) {
         votosImpl.create(votoCadastro);
 
         return ResponseEntity.ok(HttpStatus.CREATED);

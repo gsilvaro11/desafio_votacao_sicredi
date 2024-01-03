@@ -1,7 +1,7 @@
 package sicredi.votacao.service.interfaces;
 
-import sicredi.votacao.dto.VotoCadastro;
+import sicredi.votacao.dto.VotoCadastroDTO;
 
 public interface VotosService {
-    void create(VotoCadastro votoCadastro);
+    void create(VotoCadastroDTO votoCadastro);
 }
