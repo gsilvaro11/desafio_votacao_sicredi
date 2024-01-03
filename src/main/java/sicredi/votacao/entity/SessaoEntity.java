@@ -1,5 +1,8 @@
 package sicredi.votacao.entity;
 
+import java.sql.Timestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +27,9 @@ public class SessaoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long duracao;
+    
+    @Column(insertable = false, updatable = false)
+    private Timestamp dataCriacao;
 
     @ManyToOne()
     @JoinColumn(name = "id_pauta")

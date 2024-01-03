@@ -1,5 +1,7 @@
 package sicredi.votacao.dto;
 
+import java.sql.Timestamp;
+
 import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.validation.constraints.NotBlank;
@@ -21,4 +23,6 @@ public class AssociadoDTO {
     @CPF(message = "O CPF é inválido.")
     @Pattern(regexp = "^[0-9]{11}$", message = "O CPF deve ser apenas numérico.")
     private String cpf;
+
+    private Timestamp dataCriacao;
 }

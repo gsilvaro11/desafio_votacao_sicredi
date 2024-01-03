@@ -13,4 +13,5 @@ public class PautaDTO {
 
     @NotBlank(message = "Campo não pode estar vazio.")
     private String descricao;
+
 }

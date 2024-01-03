@@ -14,4 +14,7 @@ public class VotoCadastro {
     @NotBlank(message = "Campo não pode estar vazio.")
     @CPF(message = "O CPF é inválido.")
     private String cpf;
+
+    @NotNull(message = "Campo não pode ser nulo.")
+    private Boolean voto;
 }

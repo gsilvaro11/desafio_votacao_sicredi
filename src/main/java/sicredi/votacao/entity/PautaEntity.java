@@ -1,5 +1,9 @@
 package sicredi.votacao.entity;
 
+
+import java.sql.Timestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,5 +21,9 @@ public class PautaEntity {
     private Long id;
     private String titulo;
     private String descricao;
+    private String resultado;
+    
+    @Column(insertable = false, updatable = false)
+    private Timestamp dataCriacao;
 
 }
