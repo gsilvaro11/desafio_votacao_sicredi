@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PautaCadastroDTO {
-
-    private Long id;
-
+    
     @NotBlank(message = "Campo não pode estar vazio.")
     private String titulo;
 

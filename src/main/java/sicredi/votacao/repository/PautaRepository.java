@@ -20,7 +20,8 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
     @Query(value = "SELECT COUNT(vo) from PautaEntity pa " +
             "JOIN SessaoEntity se ON se.pauta.id = pa.id " +
             "JOIN VotoEntity vo ON vo.sessao.id = se.id " +
-            "WHERE pa.id = :id and vo.voto = :voto ")
+            "WHERE pa.id = :id and vo.voto = :voto " +
+            "AND se.dataCriacao = (SELECT MAX(ses.dataCriacao) FROM SessaoEntity ses WHERE ses.pauta.id = pa.id) ")
     Long countByIdAndVote(Long id, Boolean voto);
 
 }
