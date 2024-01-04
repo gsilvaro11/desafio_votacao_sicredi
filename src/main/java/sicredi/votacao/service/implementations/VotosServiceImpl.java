@@ -42,6 +42,7 @@ public class VotosServiceImpl implements VotosService {
         votosRepository.saveAndFlush(voto);
     }
 
+    @Override
     public List<VotoDTO> list() {
         return votosRepository.findAll()
                 .stream()

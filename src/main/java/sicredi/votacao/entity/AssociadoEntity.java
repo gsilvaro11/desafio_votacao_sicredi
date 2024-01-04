@@ -8,10 +8,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
+import lombok.Data;
 
 @Entity
-@Getter
+@Data
 @Table(name = "associado", schema = "desafio_sicredi")
 public class AssociadoEntity {
 

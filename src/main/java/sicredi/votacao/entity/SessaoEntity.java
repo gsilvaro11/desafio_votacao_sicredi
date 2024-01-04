@@ -37,7 +37,10 @@ public class SessaoEntity {
     private PautaEntity pauta;
 
     public Boolean validaSessaoAtiva() {
-        return LocalDateTime.now().isBefore(this.dataCriacao.toLocalDateTime().plusSeconds(this.duracao));
+        if (this.dataCriacao != null) {
+            return LocalDateTime.now().isBefore(this.dataCriacao.toLocalDateTime().plusSeconds(this.duracao));
+        }
+        return false;
     }
 
 }
