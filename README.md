@@ -82,3 +82,54 @@ Java 17, Spring Boot 3 e PostgressSQL.
 | `descricao`  | `string`  |     Sim     |   Descricao da pauta                             |
 | `resultado`  | `string`  |     Sim     |   Resultado da pauta                             |
 | `dataCriacao`| `date`    |     Sim     |   Data da criação da Pauta                       |
+
+
+### Sessão.
+#### Cadastro:
+```
+  POST /api/sessao/create
+```
+##### Dados de entrada
+|    Campo    |   Tipo   | Obrigatório  | Local de entrada |             Descrição              |
+|:-----------:|:--------:|:------------:|:----------------:|:----------------------------------:|
+|`pautaId`    | `integer` |     Sim     |       Body       | Código identificador da pauta      |
+|`duracao`    | `integer` |     Não     |       Body       | Duração da sessão                  |
+
+#### Lista:
+```
+  GET api/sessao/list
+```
+##### Dados de retorno
+|     Campo      |   Tipo    | Obrigatório |                   Descrição                    |
+|:--------------:|:---------:|:-----------:|:----------------------------------------------:|
+| `id`         | `integer` |     Sim     |   Código identificador                           |
+| `duracao`    | `integer` |     Sim     |   Duração da sessão                              |
+| `dataCriacao`| `date`    |     Sim     |   Data de criação da sessão                      |
+| `pauta`      | `PautaDTO`|     Sim     |   Objeto PautaDTO                                |
+
+### Votos.
+#### Cadastro:
+```
+  POST /api/votos/create
+```
+##### Dados de entrada
+|    Campo    |   Tipo   | Obrigatório  | Local de entrada |             Descrição              |
+|:-----------:|:--------:|:------------:|:----------------:|:----------------------------------:|
+|`sessaoId`   | `integer` |     Sim     |       Body       | Código identificador da sessão     |
+|`cpf`        | `string`  |     Sim     |       Body       | CPF do associado                   |
+|`voto`       | `boleano` |     Sim     |       Body       | Voto do associado                  |
+
+#### Lista:
+```
+  GET api/votos/list
+```
+##### Dados de retorno
+|     Campo      |   Tipo    | Obrigatório |                   Descrição                    |
+|:--------------:|:---------:|:-----------:|:----------------------------------------------:|
+| `id`           | `integer` |     Sim     |   Código identificador                         |
+| `voto`         | `string`  |     Sim     |   Voto do associado                            |
+| `dataCriacao`  | `date`    |     Sim     |   Data de criação do voto                      |
+| `idPauta`      | `integer` |     Sim     |   Código identificador da Pauta                |
+| `cpfAssociado` | `string`  |     Sim     |   CPF do associado                             |
+
+
