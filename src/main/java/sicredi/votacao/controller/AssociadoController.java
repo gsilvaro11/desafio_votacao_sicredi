@@ -15,18 +15,18 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import sicredi.votacao.dto.AssociadoCadastroDTO;
 import sicredi.votacao.dto.AssociadoDTO;
-import sicredi.votacao.service.implementations.AssociadosServiceImpl;
+import sicredi.votacao.service.interfaces.AssociadosService;
 
 @RequestMapping("api/associado")
 @RestController
 @RequiredArgsConstructor
 public class AssociadoController {
 
-    private final AssociadosServiceImpl associateImpl;
+    private final AssociadosService associadosService;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody AssociadoCadastroDTO associadoCadastroDTO) {
-        associateImpl.create(associadoCadastroDTO);
+        associadosService.create(associadoCadastroDTO);
 
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
@@ -36,6 +36,6 @@ public class AssociadoController {
             @RequestParam(required = false, value = "id") Long id,
             @RequestParam(required = false, value = "cpf") String cpf,
             @RequestParam(required = false, value = "nome") String nome) {
-        return ResponseEntity.status(HttpStatus.OK).body(associateImpl.list(id, cpf, nome));
+        return ResponseEntity.status(HttpStatus.OK).body(associadosService.list(id, cpf, nome));
     }
 }

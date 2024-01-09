@@ -14,24 +14,24 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import sicredi.votacao.dto.SessaoCadastroDTO;
 import sicredi.votacao.dto.SessaoDTO;
-import sicredi.votacao.service.implementations.SessoesServiceImpl;
+import sicredi.votacao.service.interfaces.SessoesService;
 
 @RequestMapping("api/sessao")
 @RestController
 @RequiredArgsConstructor
 public class SessaoController {
 
-    private final SessoesServiceImpl sessoesServiceImpl;
+    private final SessoesService sessoesService;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody SessaoCadastroDTO sessaoDTO) {
-        sessoesServiceImpl.create(sessaoDTO);
+        sessoesService.create(sessaoDTO);
 
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<SessaoDTO>> list() {
-        return ResponseEntity.status(HttpStatus.OK).body(sessoesServiceImpl.list());
+        return ResponseEntity.status(HttpStatus.OK).body(sessoesService.list());
     }
 }

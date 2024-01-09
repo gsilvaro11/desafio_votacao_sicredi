@@ -17,18 +17,18 @@ import lombok.RequiredArgsConstructor;
 import sicredi.votacao.dto.PautaContabilizacaoDTO;
 import sicredi.votacao.dto.PautaDTO;
 import sicredi.votacao.dto.PautaCadastroDTO;
-import sicredi.votacao.service.implementations.PautaServiceImpl;
+import sicredi.votacao.service.interfaces.PautaService;
 
 @RequestMapping("api/pauta")
 @RestController
 @RequiredArgsConstructor
 public class PautaController {
 
-    private final PautaServiceImpl pautaServiceImpl;
+    private final PautaService pautaService;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody PautaCadastroDTO pautaDTO) {
-        pautaServiceImpl.create(pautaDTO);
+        pautaService.create(pautaDTO);
 
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
@@ -38,12 +38,12 @@ public class PautaController {
             @RequestParam(required = false, value = "id") Long id,
             @RequestParam(required = false, value = "titulo") String titulo,
             @RequestParam(required = false, value = "descricao") String descricao) {
-        return ResponseEntity.status(HttpStatus.OK).body(pautaServiceImpl.list(id, titulo, descricao));
+        return ResponseEntity.status(HttpStatus.OK).body(pautaService.list(id, titulo, descricao));
     }
 
     @PostMapping("/count/{id}")
     public ResponseEntity<PautaContabilizacaoDTO> count(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(pautaServiceImpl.accounting(id));
+        return ResponseEntity.status(HttpStatus.OK).body(pautaService.accounting(id));
     }
 
 }
