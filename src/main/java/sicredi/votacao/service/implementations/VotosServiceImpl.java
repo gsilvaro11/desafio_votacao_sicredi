@@ -14,6 +14,8 @@ import sicredi.votacao.entity.VotoEntity;
 import sicredi.votacao.exception.ValidationsGlobalExceptions;
 import sicredi.votacao.exception.enums.VotoErroEnum;
 import sicredi.votacao.repository.VotosRepository;
+import sicredi.votacao.service.interfaces.AssociadosService;
+import sicredi.votacao.service.interfaces.SessoesService;
 import sicredi.votacao.service.interfaces.VotosService;
 
 @Service
@@ -21,21 +23,21 @@ import sicredi.votacao.service.interfaces.VotosService;
 public class VotosServiceImpl implements VotosService {
 
     private final VotosRepository votosRepository;
-    private final SessoesServiceImpl sessoesServiceImpl;
-    private final AssociadosServiceImpl associadosServiceImpl;
+    private final SessoesService sessoesService;
+    private final AssociadosService associadosService;
     private final ObjectMapper objectMapper;
 
     @Override
     public void create(VotoCadastroDTO novoVoto) {
         VotoEntity voto = objectMapper.convertValue(novoVoto, VotoEntity.class);
-        voto.setAssociado(associadosServiceImpl.findByCpf(novoVoto.getCpf()));
-        voto.setSessao(sessoesServiceImpl.findById(novoVoto.getSessaoId()));
+        voto.setAssociado(associadosService.findByCpf(novoVoto.getCpf()));
+        voto.setSessao(sessoesService.findById(novoVoto.getSessaoId()));
 
-        if(votosRepository.findBySessaoAndCpf(voto.getSessao().getId(), voto.getAssociado().getCpf()).isPresent()){
+        if (votosRepository.findBySessaoAndCpf(voto.getSessao().getId(), voto.getAssociado().getCpf()).isPresent()) {
             throw new ValidationsGlobalExceptions(VotoErroEnum.ASSOCIADO_CADASTRADO_NA_SESSAO.getDescricao());
         }
-        
-        if(!voto.getSessao().validaSessaoAtiva()) {
+
+        if (!voto.getSessao().validaSessaoAtiva()) {
             throw new ValidationsGlobalExceptions(VotoErroEnum.VOTACAO_ENCERRADA.getDescricao());
         }
 

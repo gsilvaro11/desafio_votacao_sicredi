@@ -17,6 +17,7 @@ import sicredi.votacao.entity.SessaoEntity;
 import sicredi.votacao.exception.ValidationsGlobalExceptions;
 import sicredi.votacao.exception.enums.SessaoErroEnum;
 import sicredi.votacao.repository.SessoesRepository;
+import sicredi.votacao.service.interfaces.PautaService;
 import sicredi.votacao.service.interfaces.SessoesService;
 
 @Service
@@ -24,7 +25,7 @@ import sicredi.votacao.service.interfaces.SessoesService;
 public class SessoesServiceImpl implements SessoesService {
 
     private final SessoesRepository sessoesRepository;
-    private final PautaServiceImpl pautaServiceImpl;
+    private final PautaService pautaService;
     private final ObjectMapper objectMapper;
 
     @Value("${sessao.duracao}")
@@ -32,7 +33,7 @@ public class SessoesServiceImpl implements SessoesService {
 
     @Override
     public void create(SessaoCadastroDTO sessaoDTO) {
-        PautaEntity pautaEntity = pautaServiceImpl.findById(sessaoDTO.getPautaId());
+        PautaEntity pautaEntity = pautaService.findById(sessaoDTO.getPautaId());
 
         sessoesRepository.saveAndFlush(SessaoEntity.builder()
                 .duracao(Objects.isNull(sessaoDTO.getDuracao()) ? SESSAO_DURACAO : sessaoDTO.getDuracao())
