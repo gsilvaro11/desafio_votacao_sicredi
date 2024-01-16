@@ -13,3 +13,10 @@ spring:
     show-sql: true  
 sessao:
   duracao: 60 #1 minuto.
+
+kafka:
+  server: localhost:9092
+  topics:
+    votes:
+      request:
+        topic: desafio.sicredi.votes

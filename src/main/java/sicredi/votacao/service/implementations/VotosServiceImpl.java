@@ -3,6 +3,7 @@ package sicredi.votacao.service.implementations;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import sicredi.votacao.exception.ValidationsGlobalExceptions;
 import sicredi.votacao.exception.enums.VotoErroEnum;
 import sicredi.votacao.repository.VotosRepository;
 import sicredi.votacao.service.interfaces.AssociadosService;
+import sicredi.votacao.service.interfaces.ProducerService;
 import sicredi.votacao.service.interfaces.SessoesService;
 import sicredi.votacao.service.interfaces.VotosService;
 
@@ -25,7 +27,11 @@ public class VotosServiceImpl implements VotosService {
     private final VotosRepository votosRepository;
     private final SessoesService sessoesService;
     private final AssociadosService associadosService;
+    private final ProducerService producerService;
     private final ObjectMapper objectMapper;
+
+    @Value("${kafka.topics.votes.request.topic}")
+    private final String VOTES_REQUEST_TOPIC;
 
     @Override
     public void create(VotoCadastroDTO novoVoto) {
@@ -41,7 +47,8 @@ public class VotosServiceImpl implements VotosService {
             throw new ValidationsGlobalExceptions(VotoErroEnum.VOTACAO_ENCERRADA.getDescricao());
         }
 
-        votosRepository.saveAndFlush(voto);
+        VotoEntity newVoto = votosRepository.saveAndFlush(voto);
+        producerService.send(VOTES_REQUEST_TOPIC, newVoto);
     }
 
     @Override
