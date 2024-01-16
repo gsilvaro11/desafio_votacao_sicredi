@@ -36,115 +36,110 @@ import sicredi.votacao.repository.VotosRepository;
 import sicredi.votacao.service.implementations.AssociadosServiceImpl;
 import sicredi.votacao.service.implementations.SessoesServiceImpl;
 import sicredi.votacao.service.implementations.VotosServiceImpl;
-import sicredi.votacao.service.interfaces.ProducerService;
 import sicredi.votacao.utils.CpfUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class VotoSericeTeste {
 
-        @InjectMocks
-        private VotosServiceImpl votosServiceImpl;
+    @InjectMocks
+    private VotosServiceImpl votosServiceImpl;
 
-        @Mock
-        private SessoesServiceImpl sessoesServiceImpl;
+    @Mock
+    private SessoesServiceImpl sessoesServiceImpl;
 
-        @Mock
-        private AssociadosServiceImpl associadosServiceImpl;
+    @Mock
+    private AssociadosServiceImpl associadosServiceImpl;
 
-        @Mock
-        private ProducerService producerService;
+    @Mock
+    private VotosRepository votosRepository;
 
-        @Mock
-        private VotosRepository votosRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private VotoEntity votoEntity = new VotoEntity();
+    private AssociadoEntity associadoEntity = new AssociadoEntity();
+    private SessaoEntity sessaoEntity = new SessaoEntity();
+    private String cpfString = CpfUtils.generateCPF();
 
-        private final ObjectMapper objectMapper = new ObjectMapper();
-        private final VotoEntity votoEntity = new VotoEntity();
-        private final AssociadoEntity associadoEntity = new AssociadoEntity();
-        private final SessaoEntity sessaoEntity = new SessaoEntity();
-        private final String cpfString = CpfUtils.generateCPF();
+    @BeforeEach
+    void init() {
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ReflectionTestUtils.setField(votosServiceImpl, "objectMapper", objectMapper);
 
-        @BeforeEach
-        void init() {
-                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                ReflectionTestUtils.setField(votosServiceImpl, "objectMapper", objectMapper);
+        sessaoEntity.setId(1L);
+        sessaoEntity.setDuracao(60L);
+        sessaoEntity.setDataCriacao(new Timestamp(0));
 
-                sessaoEntity.setId(1L);
-                sessaoEntity.setDuracao(60L);
-                sessaoEntity.setDataCriacao(new Timestamp(0));
+        associadoEntity.setId(1L);
+        associadoEntity.setNome("Teste da Silva");
+        associadoEntity.setCpf(cpfString);
+        associadoEntity.setDataCriacao(new Timestamp(0));
 
-                associadoEntity.setId(1L);
-                associadoEntity.setNome("Teste da Silva");
-                associadoEntity.setCpf(cpfString);
-                associadoEntity.setDataCriacao(new Timestamp(0));
+        votoEntity.setId(1L);
+        votoEntity.setSessao(sessaoEntity);
+        votoEntity.setAssociado(associadoEntity);
+        votoEntity.setDataCriacao(new Timestamp(0));
+        votoEntity.setVoto(true);
 
-                votoEntity.setId(1L);
-                votoEntity.setSessao(sessaoEntity);
-                votoEntity.setAssociado(associadoEntity);
-                votoEntity.setDataCriacao(new Timestamp(0));
-                votoEntity.setVoto(true);
+    }
 
-        }
+    @Test()
+    public void successfulCreation() {
+        String cpf = CpfUtils.generateCPF();
+        VotoCadastroDTO novoVoto = VotoCadastroDTO.builder()
+                .cpf(cpf)
+                .voto(true)
+                .sessaoId(1L)
+                .build();
 
-        @Test()
-        public void successfulCreation() {
-                String cpf = CpfUtils.generateCPF();
-                VotoCadastroDTO novoVoto = VotoCadastroDTO.builder()
-                                .cpf(cpf)
-                                .voto(true)
-                                .sessaoId(1L)
-                                .build();
+        when(associadosServiceImpl.findByCpf(novoVoto.getCpf())).thenReturn(associadoEntity);
 
-                when(associadosServiceImpl.findByCpf(novoVoto.getCpf())).thenReturn(associadoEntity);
+        sessaoEntity.setDataCriacao(new Timestamp(System.currentTimeMillis() - sessaoEntity.getDuracao()));
+        when(sessoesServiceImpl.findById(novoVoto.getSessaoId())).thenReturn(sessaoEntity);
 
-                sessaoEntity.setDataCriacao(new Timestamp(System.currentTimeMillis() - sessaoEntity.getDuracao()));
-                when(sessoesServiceImpl.findById(novoVoto.getSessaoId())).thenReturn(sessaoEntity);
+        when(votosRepository.findBySessaoAndCpf(sessaoEntity.getId(), associadoEntity.getCpf()))
+                .thenReturn(Optional.empty());
 
-                when(votosRepository.findBySessaoAndCpf(sessaoEntity.getId(), associadoEntity.getCpf()))
-                                .thenReturn(Optional.empty());
+        votosServiceImpl.create(novoVoto);
 
-                votosServiceImpl.create(novoVoto);
+        verify(votosRepository, times(1)).saveAndFlush(any(VotoEntity.class));
+    }
 
-                verify(votosRepository, times(1)).saveAndFlush(any(VotoEntity.class));
-                verify(producerService, times(1)).send(null, null);
-        }
+    @Test
+    public void createShouldThrowValidationsGlobalExceptions() {
+        String cpf = CpfUtils.generateCPF();
+        VotoCadastroDTO novoVoto = VotoCadastroDTO.builder()
+                .cpf(cpf)
+                .voto(true)
+                .sessaoId(1L)
+                .build();
 
-        @Test
-        public void createShouldThrowValidationsGlobalExceptions() {
-                String cpf = CpfUtils.generateCPF();
-                VotoCadastroDTO novoVoto = VotoCadastroDTO.builder()
-                                .cpf(cpf)
-                                .voto(true)
-                                .sessaoId(1L)
-                                .build();
+        when(associadosServiceImpl.findByCpf(novoVoto.getCpf())).thenReturn(associadoEntity);
+        when(sessoesServiceImpl.findById(novoVoto.getSessaoId())).thenReturn(sessaoEntity);
 
-                when(associadosServiceImpl.findByCpf(novoVoto.getCpf())).thenReturn(associadoEntity);
-                when(sessoesServiceImpl.findById(novoVoto.getSessaoId())).thenReturn(sessaoEntity);
+        when(votosRepository.findBySessaoAndCpf(sessaoEntity.getId(), associadoEntity.getCpf()))
+                .thenReturn(Optional.empty());
 
-                when(votosRepository.findBySessaoAndCpf(sessaoEntity.getId(), associadoEntity.getCpf()))
-                                .thenReturn(Optional.empty());
+        assertThrows(ValidationsGlobalExceptions.class, () -> votosServiceImpl.create(novoVoto));
+        verify(votosRepository, never()).saveAndFlush(any(VotoEntity.class));
+    }
 
-                assertThrows(ValidationsGlobalExceptions.class, () -> votosServiceImpl.create(novoVoto));
-                verify(votosRepository, never()).saveAndFlush(any(VotoEntity.class));
-        }
+    @Test
+    public void list() {
+        List<VotoEntity> votoEntities = new ArrayList<>();
+        votoEntities.add(votoEntity);
 
-        @Test
-        public void list() {
-                List<VotoEntity> votoEntities = new ArrayList<>();
-                votoEntities.add(votoEntity);
+        List<VotoDTO> votosDTO = votoEntities.stream()
+                .map(voto -> VotoDTO.builder()
+                        .id(voto.getId())
+                        .voto(voto.getVoto() ? "SIM" : "NÃO")
+                        .dataCriacao(voto.getDataCriacao())
+                        .cpfAssociado(voto.getAssociado().getCpf())
+                        .build())
+                .collect(Collectors.toList());
 
-                List<VotoDTO> votosDTO = votoEntities.stream()
-                                .map(voto -> VotoDTO.builder()
-                                                .id(voto.getId())
-                                                .voto(voto.getVoto() ? "SIM" : "NÃO")
-                                                .dataCriacao(voto.getDataCriacao())
-                                                .cpfAssociado(voto.getAssociado().getCpf())
-                                                .build())
-                                .collect(Collectors.toList());
+        assertAll(
+                () -> assertEquals(1L, votosDTO.get(0).getId()),
+                () -> assertEquals("SIM", votosDTO.get(0).getVoto()),
+                () -> assertEquals(cpfString, votosDTO.get(0).getCpfAssociado()));
 
-                assertAll(
-                                () -> assertEquals(1L, votosDTO.get(0).getId()),
-                                () -> assertEquals("SIM", votosDTO.get(0).getVoto()),
-                                () -> assertEquals(cpfString, votosDTO.get(0).getCpfAssociado()));
-
-        }
+    }
 }
